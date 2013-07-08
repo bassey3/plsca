@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Faults>
+   <Fault>
+      <severity>error</severity>
+      <loc>/ns:composite</loc>
+      <line>12</line>
+      <col>61</col>
+      <file>/Users/ex1/jdeveloper/mywork/Gravity/gravity_project/composite.xml</file>
+      <name>/Users/ex1/jdeveloper/mywork/Gravity/gravity_project/composite.xml</name>
+      <fix/>
+      <msg>Parse of component type files failed, check the adf-config.xml file : "Error at line 44 char 38: Malformed WS Binding port.  Missing # between namespace URI and service/port names."</msg>
+   </Fault>
+</Faults>

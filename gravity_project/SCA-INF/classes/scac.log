@@ -1,0 +1,33 @@
+Jul 08, 2013 3:29:50 AM org.apache.commons.digester.Digester startElement
+SEVERE: Begin event threw exception
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.apache.commons.beanutils.PropertyUtilsBean.invokeMethod(PropertyUtilsBean.java:1773)
+	at org.apache.commons.beanutils.PropertyUtilsBean.setSimpleProperty(PropertyUtilsBean.java:1759)
+	at org.apache.commons.beanutils.PropertyUtilsBean.setNestedProperty(PropertyUtilsBean.java:1648)
+	at org.apache.commons.beanutils.PropertyUtilsBean.setProperty(PropertyUtilsBean.java:1677)
+	at org.apache.commons.beanutils.BeanUtilsBean.setProperty(BeanUtilsBean.java:1022)
+	at org.apache.commons.beanutils.BeanUtilsBean.populate(BeanUtilsBean.java:811)
+	at org.apache.commons.beanutils.BeanUtils.populate(BeanUtils.java:298)
+	at org.apache.commons.digester.SetPropertiesRule.begin(SetPropertiesRule.java:252)
+	at org.apache.commons.digester.Rule.begin(Rule.java:175)
+	at org.apache.commons.digester.Digester.startElement(Digester.java:1453)
+	at oracle.xml.parser.v2.NonValidatingParser.parseElement(NonValidatingParser.java:1558)
+	at oracle.xml.parser.v2.NonValidatingParser.parseRootElement(NonValidatingParser.java:442)
+	at oracle.xml.parser.v2.NonValidatingParser.parseDocument(NonValidatingParser.java:388)
+	at oracle.xml.parser.v2.XMLParser.parse(XMLParser.java:232)
+	at org.apache.commons.digester.Digester.parse(Digester.java:1785)
+	at oracle.fabric.composite.Parser.parseComposite(Parser.java:132)
+	at oracle.soa.scac.ValidateComposite.loadComposite(ValidateComposite.java:782)
+	at oracle.soa.scac.ValidateComposite.doValidation(ValidateComposite.java:472)
+	at oracle.soa.scac.ValidateComposite.run0(ValidateComposite.java:206)
+	at oracle.soa.scac.ValidateComposite.run(ValidateComposite.java:187)
+	at oracle.soa.scac.ValidateComposite.main(ValidateComposite.java:179)
+Caused by: oracle.fabric.common.FabricException: Malformed WS Binding port.  Missing # between namespace URI and service/port names.
+	at oracle.fabric.composite.WsBindingPortParser.parse(WsBindingPortParser.java:32)
+	at oracle.fabric.composite.model.WsBindingConfigModel.setPort(WsBindingConfigModel.java:88)
+	... 25 more
+
