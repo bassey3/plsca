@@ -1,0 +1,90 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Sun Jul 07 20:00:40 BST 2013
+  Author:  ex1
+  Type: BPEL 1.1 Process
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="initiate_request"
+               targetNamespace="http://xmlns.oracle.com/Gravity/gravity_project/initiate_request"
+               xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+               xmlns:client="http://xmlns.oracle.com/Gravity/gravity_project/initiate_request"
+               xmlns:ora="http://schemas.oracle.com/xpath/extension"
+               xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:ns1="http://xmlns.oracle.com/bpel/workflow/taskService"
+         xmlns:bpel2="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns2="http://oracle.com/sca/soapservice/Gravity/gravity_project/getidservice">
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    --> 
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="initiate_request_client" partnerLinkType="client:initiate_request" myRole="initiate_requestProvider"/>
+    <partnerLink name="EnterDetails.TaskService"
+                 partnerLinkType="ns1:TaskService" partnerRole="TaskService"
+                 myRole="TaskServiceCallbackListener"/>
+    <partnerLink name="getId" partnerLinkType="ns2:getidservice"
+                 partnerRole="getidserviceProvider"/>
+  </partnerLinks>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="client:initiate_requestRequestMessage"/>
+
+    <!-- Reference to the message that will be returned to the requester-->
+    <variable name="outputVariable" messageType="client:initiate_requestResponseMessage"/>
+    <variable name="InvokeRequestScreens_initiateTask_InputVariable"
+              messageType="ns1:initiateTaskMessage"/>
+    <variable name="InvokeRequestScreens_initiateTask_OutputVariable"
+              messageType="ns1:initiateTaskResponseMessage"/>
+    <variable name="getid_execute_InputVariable"
+              messageType="ns2:requestMessage"/>
+    <variable name="getid_execute_OutputVariable"
+              messageType="ns2:replyMessage"/>
+  </variables>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in initiate_request.wsdl) -->
+    <invoke name="getid"
+            inputVariable="getid_execute_InputVariable"
+            outputVariable="getid_execute_OutputVariable" partnerLink="getId"
+            portType="ns2:execute_ptt" operation="execute"
+            bpelx:invokeAsDetail="yes" bpelx:conversationId="getidconvo"/>
+    <receive name="receiveInput" partnerLink="initiate_request_client" portType="client:initiate_request" operation="process" variable="inputVariable" createInstance="yes"/>
+    <invoke name="InvokeRequestScreens" bpelx:invokeAsDetail="yes"
+            bpelx:conversationId="reqconvID"
+            inputVariable="InvokeRequestScreens_initiateTask_InputVariable"
+            outputVariable="InvokeRequestScreens_initiateTask_OutputVariable"
+            partnerLink="EnterDetails.TaskService" portType="ns1:TaskService"
+            operation="initiateTask"/>
+    <!-- Generate reply to synchronous request -->
+    <reply name="replyOutput" partnerLink="initiate_request_client" portType="client:initiate_request" operation="process" variable="outputVariable"/>
+  </sequence>
+</process>
